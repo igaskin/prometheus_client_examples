@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1beta1 # for versions before 1.14 use extensions/v1beta1
+kind: Ingress
+metadata:
+  name: example-ingress
+spec:
+  rules:
+  - host: alertmanager.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: alertmanager-main 
+          servicePort: 9093
+  - host: grafana.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: grafana
+          servicePort: 3000
+  - host: prometheus.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: prometheus-k8s
+          servicePort: 9090
+  - host: ruby-client.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: ruby-client-svc
+          servicePort: 8000
+  - host: golang-client.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: golang-client-svc
+          servicePort: 8080
+  - host: python-client.local
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: python-client-svc
+          servicePort: 8000
