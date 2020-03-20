@@ -3,15 +3,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: golang-client
-  name: golang-client
+    app: prometheus-client-golang
+  name: prometheus-client-golang
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: golang-client
+      app: prometheus-client-golang
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,12 +20,12 @@ spec:
   template:
     metadata:
       labels:
-        app: golang-client
+        app: prometheus-client-golang
     spec:
       containers:
       - image: localhost:5000/prom_client_golang
         imagePullPolicy: Always
-        name: golang-client
+        name: prometheus-client-golang
         ports:
         - containerPort: 8080
           name: http
@@ -40,8 +40,8 @@ kind: Service
 metadata:
   labels:
     monitoring: prometheus
-    app: golang-client-svc
-  name: golang-client-svc
+    app: prometheus-client-golang-svc
+  name: prometheus-client-golang-svc
 spec:
   ports:
   - name: http
@@ -49,15 +49,15 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: golang-client
+    app: prometheus-client-golang
   type: ClusterIP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    k8s-app: golang-client
-  name: golang-client
+    k8s-app: prometheus-client-golang
+  name: prometheus-client-golang
 spec:
   endpoints:
   - interval: 5s
@@ -67,5 +67,5 @@ spec:
     - monitoring
   selector:
     matchLabels:
-      app: golang-client-svc
+      app: prometheus-client-golang-svc
       monitoring: prometheus

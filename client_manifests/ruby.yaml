@@ -3,15 +3,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: ruby-client
-  name: ruby-client
+    app: prometheus-client-ruby
+  name: prometheus-client-ruby
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: ruby-client
+      app: prometheus-client-ruby
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,12 +20,12 @@ spec:
   template:
     metadata:
       labels:
-        app: ruby-client
+        app: prometheus-client-ruby
     spec:
       containers:
       - image: localhost:5000/prom_client_ruby
         imagePullPolicy: Always
-        name: ruby-client
+        name: prometheus-client-ruby
         ports:
         - containerPort: 8000
           name: http
@@ -40,8 +40,8 @@ kind: Service
 metadata:
   labels:
     monitoring: prometheus
-    app: ruby-client-svc
-  name: ruby-client-svc
+    app: prometheus-client-ruby-svc
+  name: prometheus-client-ruby-svc
 spec:
   ports:
   - name: http
@@ -49,15 +49,15 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: ruby-client
+    app: prometheus-client-ruby
   type: ClusterIP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    k8s-app: ruby-client
-  name: ruby-client
+    k8s-app: prometheus-client-ruby
+  name: prometheus-client-ruby
 spec:
   endpoints:
   - interval: 5s
@@ -67,5 +67,5 @@ spec:
     - monitoring
   selector:
     matchLabels:
-      app: ruby-client-svc
+      app: prometheus-client-ruby-svc
       monitoring: prometheus

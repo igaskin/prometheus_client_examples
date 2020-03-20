@@ -4,45 +4,45 @@ metadata:
   name: example-ingress
 spec:
   rules:
-  - host: alertmanager.local
+  - host: alertmanager.internal
     http:
       paths:
       - path: /
         backend:
           serviceName: alertmanager-main 
           servicePort: 9093
-  - host: grafana.local
+  - host: grafana.internal
     http:
       paths:
       - path: /
         backend:
           serviceName: grafana
           servicePort: 3000
-  - host: prometheus.local
+  - host: prometheus.internal
     http:
       paths:
       - path: /
         backend:
           serviceName: prometheus-k8s
           servicePort: 9090
-  - host: ruby-client.local
+  - host: ruby-client.internal
     http:
       paths:
       - path: /
         backend:
-          serviceName: ruby-client-svc
+          serviceName: prometheus-client-ruby-svc
           servicePort: 8000
-  - host: golang-client.local
+  - host: golang-client.internal
     http:
       paths:
       - path: /
         backend:
-          serviceName: golang-client-svc
+          serviceName: prometheus-client-golang-svc
           servicePort: 8080
-  - host: python-client.local
+  - host: python-client.internal
     http:
       paths:
       - path: /
         backend:
-          serviceName: python-client-svc
+          serviceName: prometheus-client-python-svc
           servicePort: 8000

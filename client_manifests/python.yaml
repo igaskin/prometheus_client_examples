@@ -3,15 +3,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: python-client
-  name: python-client
+    app: prometheus-client-python
+  name: prometheus-client-python
 spec:
   progressDeadlineSeconds: 600
   replicas: 1
   revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: python-client
+      app: prometheus-client-python
   strategy:
     rollingUpdate:
       maxSurge: 25%
@@ -20,12 +20,12 @@ spec:
   template:
     metadata:
       labels:
-        app: python-client
+        app: prometheus-client-python
     spec:
       containers:
       - image: localhost:5000/prom_client_python
         imagePullPolicy: Always
-        name: python-client
+        name: prometheus-client-python
         ports:
         - containerPort: 8000
           name: http
@@ -40,8 +40,8 @@ kind: Service
 metadata:
   labels:
     monitoring: prometheus
-    app: python-client-svc
-  name: python-client-svc
+    app: prometheus-client-python-svc
+  name: prometheus-client-python-svc
 spec:
   ports:
   - name: http
@@ -49,15 +49,15 @@ spec:
     protocol: TCP
     targetPort: http
   selector:
-    app: python-client
+    app: prometheus-client-python
   type: ClusterIP
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   labels:
-    k8s-app: python-client
-  name: python-client
+    k8s-app: prometheus-client-python
+  name: prometheus-client-python
 spec:
   endpoints:
   - interval: 5s
@@ -67,5 +67,5 @@ spec:
     - monitoring
   selector:
     matchLabels:
-      app: python-client-svc
+      app: prometheus-client-python-svc
       monitoring: prometheus

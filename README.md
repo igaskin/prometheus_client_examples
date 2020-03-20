@@ -45,13 +45,13 @@ Run a local prometheus monitoring stack on minikube
 
     _/etc/hosts_
     ```
-    192.168.64.2 alertmanager.local grafana.local prometheus.local ruby-client.local golang-client.local python-client.local
+    192.168.64.2 alertmanager.internal grafana.internal prometheus.internal ruby-client.internal golang-client.internal python-client.internal
     ```
 
 1. Review your infrastructure in the browser. Note the default login for grafana is `admin/admin`
 
     ```
-    $ open http://grafana.local http://alertmanager.local http://prometheus.local
+    $ open http://grafana.internal http://alertmanager.internal http://prometheus.internal
     ```
 
     ![](docs/prometheus.png)
@@ -71,13 +71,28 @@ Run a local prometheus monitoring stack on minikube
 1. Navigate to all client `/metrics` endpoints
 
     ```
-    $ open http://ruby-client.local/metrics http://golang-client.local/metrics http://python-client.local/metrics
+    $ open http://ruby-client.internal/metrics http://golang-client.internal/metrics http://python-client.internal/metrics
     ```
 ## Teardown
 
 ```
 $ kubectl delete --ignore-not-found=true -f kube-prometheus/manifests/ -f kube-prometheus/manifests/setup -f client_manifests/
 $ minikube delete
+```
+
+## Troubleshooting
+
+Occsionally the kube-apiserver gets in a bad state in minikube, with the following error.
+
+```
+error: unable to upgrade connection: Authorization error (user=kube-apiserver-kubelet-client, verb=create, resource=nodes, subresource=proxy)
+```
+
+Restarting minikube may help return the apiserver to a working state
+
+```
+$ minikube stop
+$ minikube start
 ```
 
 ## References
