@@ -31,7 +31,7 @@ Run a local prometheus monitoring stack on minikube
     $ kubectl create -f kube-prometheus/manifests/setup
     $ until kubectl get servicemonitors --all-namespaces ; do date; sleep 1; echo ""; done
     $ kubectl create -f kube-prometheus/manifests/
-    $ kubectl create -f 
+    $ kubectl create -f client_manifests/
     ```
 
 1. Build and push all docker images for prometheus client examples `make all`

@@ -19,14 +19,38 @@ import (
 	"flag"
 	"log"
 	"net/http"
+	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 var addr = flag.String("listen-address", "0.0.0.0:8080", "The address to listen on for HTTP requests.")
 
+var (
+	rpcExampleState = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "rpc_state_count",
+			Help: "RPC state counter",
+		},
+		[]string{"status", "service"},
+	)
+)
+
+func init() {
+	prometheus.MustRegister(rpcExampleState)
+}
+
 func main() {
 	flag.Parse()
+
+	go func() {
+		for {
+			time.Sleep(time.Second * 1)
+			rpcExampleState.WithLabelValues("success", "factory-handler").Inc()
+		}
+	}()
+
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
